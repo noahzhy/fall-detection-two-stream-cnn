@@ -18,8 +18,10 @@ WEIGHTS_PATH = "weights/weights.hdf5" # Change weight path here
 
 def create_base_model(prefix = None, image_size = 224):
     base_model = MobileNetV2(
-        input_shape = (image_size, image_size, 3), alpha = 1.0, depth_multiplier = 1,
-        include_top = False, weights = "imagenet"
+        input_shape = (image_size, image_size, 3),
+        alpha = 1.0,
+        include_top = False,
+        weights = 'weights/mobilenet_v2.h5'
     )
 
     # Prefix all layers' names to avoid conflict

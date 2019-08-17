@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import math
 from timeit import default_timer as timer
+from keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 from train_model import create_model, WEIGHTS_PATH
 from keras.applications.mobilenet_v2 import preprocess_input
 
@@ -14,9 +15,12 @@ MHI_DURATION = 1500 # milliseconds
 THRESHOLD = 32
 GAUSSIAN_KERNEL = (3, 3)
 
+# WEIGHTS_PATH = "weights/weights.hdf5"
+
+
 def start_fall_detector_FDD(video_path, annotation_path):
     ''' Uses the annotated frames from the FDD dataset for spatial stream '''
-    model = create_model(WEIGHTS_PATH)
+    model = create_model("weights/weights.hdf5")
     video = cv.VideoCapture(video_path)
     if not video.isOpened():
         print("Cannot open video {}".format(video_path))
@@ -49,7 +53,7 @@ def start_fall_detector_FDD(video_path, annotation_path):
 
     fall_frames_seen = 0 # Number of consecutive fall frames seen so far
     fall_detected = False
-    MIN_NUM_FALL_FRAME = int(fps/5) # Need at least some number of frames to avoid flickery classifications
+    MIN_NUM_FALL_FRAME = int(fps/10) # Need at least some number of frames to avoid flickery classifications
 
     while True:
         start_time = timer()
@@ -167,7 +171,7 @@ def start_fall_detector_realtime(input_path = 0):
 
     fall_frames_seen = 0 # Number of consecutive fall frames seen so far
     fall_detected = False
-    MIN_NUM_FALL_FRAME = int(fps/5) # Need at least some number of frames to avoid flickery classifications
+    MIN_NUM_FALL_FRAME = int(fps/10) # Need at least some number of frames to avoid flickery classifications
 
     cv.namedWindow("Capture")
     cv.namedWindow("Cropped")
@@ -277,9 +281,9 @@ def start_fall_detector_realtime(input_path = 0):
 
 if __name__ == "__main__":
     # start_fall_detector_FDD(
-    #     "datasets/FDD/Coffee_room_01/Videos/video (5).avi",
-    #     "datasets/FDD/Coffee_room_01/Annotation_files/video (5).txt"
+    #     "video_50.avi",
+    #     "video_50.txt"
     # )
-    start_fall_detector_realtime("datasets/FDD/Home_02/Videos/video (40).avi")
+    start_fall_detector_realtime()
     # start_fall_detector_realtime("datasets/URFD/Fall_videos/fall-15-cam0-rgb.avi")
     # start_fall_detector_realtime("demo/test3.avi")
